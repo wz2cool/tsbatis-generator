@@ -15,6 +15,11 @@ import (
 
 func main() {
 	fmt.Println("hello world")
+	_, err := readCommandArgs()
+	if err != nil {
+		return
+	}
+
 }
 
 func readCommandArgs() (*models.InitArgs, error) {
