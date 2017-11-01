@@ -53,5 +53,6 @@ func readCommandArgs() (*models.InitArgs, error) {
 	result.DbType = *dbType
 	result.File = *file
 	result.OutDir = *outDir
+	log4go.Info("%s end", methodName)
 	return result, nil
 }
