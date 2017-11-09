@@ -1,17 +1,5 @@
-# TypeScript 2 + Express + Node.js + Swagger
-This is a base template for creating express project with ts2 and swagger.
+# typescript-package-starter
 
-## install 
-Install the node package via:  
-`$ npm install`  
+A simple starter for TypeScript packages, easy to be published via npm.
 
-AND then run the gulp task to complie the Typescript:  
-`$ npm run build`
-
-# Staring
-To start the server run:
-`$ npm start`
-
-## default page:
-Home page: http://localhost:3000  
-Swagger page: http://localhost:3000/api-docs
+Scripts can be found in package.json scripts.
