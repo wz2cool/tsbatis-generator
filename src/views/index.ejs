@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html class="fill">
 
 <head>
     <title>
         <%= title %>
     </title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/layout.min.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
-<body>
-    <h1>
-        <%= title %>
-    </h1>
-    <p>Welcome to
-        <%= title %>
-    </p>
+<body class="fill">
+    <div class="horizontal-container fill-right fill">
+        <div class="left-panel fill-height">
+            left panel (auto)
+        </div>
+        <div class="right-panel fill-height">
+            right panel (fill rest)
+        </div>
+    </div>
 </body>
 
 </html>
