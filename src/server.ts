@@ -1,5 +1,6 @@
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
+import * as ejs from "ejs";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
@@ -8,7 +9,6 @@ import * as swaggerJSDoc from "swagger-jsdoc";
 import * as swaggerUi from "swagger-ui-express";
 import * as apis from "./apis";
 import * as routes from "./routes";
-import * as ejs from "ejs";
 
 export class Server {
     public static bootstrap(): Server {
@@ -23,7 +23,7 @@ export class Server {
 
     private config(): void {
         // view engine setup
-        this.app.set("views", path.join(__dirname, "views"));
+        this.app.set("views", path.join(__dirname, "public", "views"));
         this.app.engine(".html", ejs.__express);
         this.app.set("view engine", "html");
 
@@ -60,7 +60,6 @@ export class Server {
     private routes(): void {
         // visit: http://localhost:3000/
         this.app.use("/", routes.Home.getRoute());
-        this.app.use("/entitygenerator", routes.EntityGenertator.getRoute());
     }
 
     private apis(): void {
