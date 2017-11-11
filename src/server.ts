@@ -23,7 +23,7 @@ export class Server {
 
     private config(): void {
         // view engine setup
-        this.app.set("views", path.join(__dirname, "public", "views"));
+        this.app.set("views", path.join(__dirname, "public"));
         this.app.engine(".html", ejs.__express);
         this.app.set("view engine", "html");
 
