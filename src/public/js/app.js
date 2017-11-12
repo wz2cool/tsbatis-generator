@@ -1,1 +1,5 @@
-angular.module('myApp', ['ui.bootstrap']);
+(function () {
+    'use strict';
+    angular.module('myApp', ['ui.bootstrap', 'ui.router']);
+})();
+
