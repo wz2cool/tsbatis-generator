@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div ng-controller="entityGeneratorController">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Database Type
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="btn-group">
+                <label class="btn btn-default" ng-model="dbType" uib-btn-radio="'sqlite'">Sqlite</label>
+                <label class="btn btn-default" ng-model="dbType" uib-btn-radio="'mysql'">Mysql</label>
+            </div>
+        </div>
+    </div>
+    <div ng-if="dbType==='sqlite'" class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Sqlite File Path
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="horizontal-container fill-left">
+                <div class="right-panel">
+                    <input type="button" class="margin-left-10 btn btn-success"
+                           value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connect&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
+                </div>
+                <div class="left-panel">
+                    <input type="text" class="form-control" placeholder="eg: c:\data\northwind.db">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
