@@ -1,4 +1,6 @@
 <div ng-controller="entityGeneratorController">
+    <div ng-include="'views/entitygenerator/modal_template.html'"></div>
+
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -19,14 +21,15 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div class="horizontal-container fill-left">
-                <div class="right-panel">
-                    <input type="button" class="margin-left-10 btn btn-success"
-                           value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connect&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">
-                </div>
-                <div class="left-panel">
-                    <input type="text" class="form-control" placeholder="eg: c:\data\northwind.db">
-                </div>
+            <div class="input-group">
+                <span class="input-group-addon fa fa-address-book" aria-hidden="true"></span>
+                <input type="text" class="form-control" placeholder="eg: c:\data\northwind.db">
+            </div>
+            <br>
+            <div class="input-group">
+                <input type="button" class="btn btn-success"
+                       value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connect&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                       ng-click="connect()">
             </div>
         </div>
     </div>

@@ -14,3 +14,7 @@
 .nav-list {
     width: 250px;
 }
+
+.input-group-addon.fa {
+    display: table-cell;
+}
