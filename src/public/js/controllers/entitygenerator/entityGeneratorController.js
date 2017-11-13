@@ -2,8 +2,6 @@
     'use strict';
     angular.module('myApp').controller('entityGeneratorController',
         ['$scope', '$uibModal', function ($scope, $uibModal) {
-
-
             $scope.connect = function () {
                 $uibModal.open({
                     animation: true,
