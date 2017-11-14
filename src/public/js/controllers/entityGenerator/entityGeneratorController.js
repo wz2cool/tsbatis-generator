@@ -9,8 +9,11 @@
                     ariaDescribedBy: 'modal-body-top',
                     templateUrl: 'views/entityGenerator/selectEntityModal.html',
                     size: 'sm',
-                    controller: function ($scope) {
-                        $scope.name = 'top';
+                    controller: 'selectEntityModalController',
+                    resolve: {
+                        context: function () {
+                            return {};
+                        }
                     }
                 });
             }
