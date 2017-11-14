@@ -6,9 +6,9 @@
                 url: '/home',
                 templateUrl: 'views/home/index.html'
             })
-            .state('entitygenerator', {
-                url: '/entitygenerator',
-                templateUrl: 'views/entitygenerator/index.html'
+            .state('entityGenerator', {
+                url: '/entityGenerator',
+                templateUrl: 'views/entityGenerator/index.html'
             })
     }]);
 })();

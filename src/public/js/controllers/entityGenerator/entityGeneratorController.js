@@ -7,7 +7,7 @@
                     animation: true,
                     ariaLabelledBy: 'modal-title-top',
                     ariaDescribedBy: 'modal-body-top',
-                    templateUrl: 'myModalContent.html',
+                    templateUrl: 'views/entityGenerator/selectEntityModal.html',
                     size: 'sm',
                     controller: function ($scope) {
                         $scope.name = 'top';
