@@ -65,6 +65,7 @@ export class Server {
     private apis(): void {
         // visit: http://localhost:3000/api/users
         this.app.use("/users", apis.UserApi.getRoute());
+        this.app.use("/sqlite", apis.SqliteApi.getRoute());
     }
 
     private swagger(): void {

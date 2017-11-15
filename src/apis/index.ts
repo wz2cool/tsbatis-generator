@@ -1,3 +1,4 @@
+import { SqliteApi } from "./sqliteApi";
 import { UserApi } from "./userApi";
 
-export { UserApi };
+export { UserApi, SqliteApi };
