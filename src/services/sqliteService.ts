@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
 import { ConnectionFactory, SqliteConnectionConfig } from "tsbatis";
-import { TableName } from "../db/entity/view";
+import { TableName, TableInfo } from "../db/entity/view";
 
 export class SqliteService {
     public static async getTableNames(sqliteFile: string): Promise<string[]> {
@@ -23,6 +23,26 @@ export class SqliteService {
             return result;
         } catch (e) {
             return new Promise<string[]>((resolve, reject) => reject(e));
+        }
+    }
+
+    public static async getTableInfo(sqliteFile: string, tableName: string): Promise<TableInfo[]> {
+        if (!fs.existsSync(sqliteFile)) {
+            return new Promise<TableInfo[]>((resolve, reject) => {
+                reject(new Error(`can not find file: "${sqliteFile}"`));
+            });
+        }
+
+        try {
+            const config = new SqliteConnectionConfig();
+            config.filepath = sqliteFile;
+            const connectionFactory = new ConnectionFactory(config, true);
+            const connection = await connectionFactory.getConnection();
+            const tableInfos = await connection.selectEntities<TableInfo>(
+                TableInfo, `PRAGMA table_info ("${tableName}");`, []);
+            return tableInfos;
+        } catch (e) {
+            return new Promise<TableInfo[]>((resolve, reject) => reject(e));
         }
     }
 }
