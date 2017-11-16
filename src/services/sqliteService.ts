@@ -2,17 +2,12 @@ import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
 import { ConnectionFactory, SqliteConnectionConfig } from "tsbatis";
-import { TableName, TableInfo } from "../db/entity/view";
+import { TableInfo, TableName } from "../db/entity/view";
 
 export class SqliteService {
-    public static async getTableNames(sqliteFile: string): Promise<string[]> {
-        if (!fs.existsSync(sqliteFile)) {
-            return new Promise<string[]>((resolve, reject) => {
-                reject(new Error(`can not find file: "${sqliteFile}"`));
-            });
-        }
-
+    public async getTableNames(sqliteFile: string): Promise<string[]> {
         try {
+            await this.checkFileExists(sqliteFile);
             const config = new SqliteConnectionConfig();
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
@@ -26,14 +21,9 @@ export class SqliteService {
         }
     }
 
-    public static async getTableInfo(sqliteFile: string, tableName: string): Promise<TableInfo[]> {
-        if (!fs.existsSync(sqliteFile)) {
-            return new Promise<TableInfo[]>((resolve, reject) => {
-                reject(new Error(`can not find file: "${sqliteFile}"`));
-            });
-        }
-
+    public async getTableInfos(sqliteFile: string, tableName: string): Promise<TableInfo[]> {
         try {
+            await this.checkFileExists(sqliteFile);
             const config = new SqliteConnectionConfig();
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
@@ -44,5 +34,17 @@ export class SqliteService {
         } catch (e) {
             return new Promise<TableInfo[]>((resolve, reject) => reject(e));
         }
+    }
+
+    private checkFileExists(sqliteFile: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.exists(sqliteFile, (exists) => {
+                if (exists) {
+                    resolve();
+                } else {
+                    reject(new Error(`can not find file: "${sqliteFile}"`));
+                }
+            });
+        });
     }
 }

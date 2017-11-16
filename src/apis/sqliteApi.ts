@@ -2,7 +2,8 @@ import * as express from "express";
 import { SqliteService } from "../services/sqliteService";
 
 export class SqliteApi {
-    public static getRoute(): express.Router {
+    private readonly sqliteService = new SqliteService();
+    public getRoute(): express.Router {
         const sqliteApi = express.Router();
 
         sqliteApi.get("/", (req, res, next) => {
@@ -12,7 +13,7 @@ export class SqliteApi {
         sqliteApi.post("/getTableNames", (req, res, next) => {
             const sqliteFile = req.body.file;
             console.log(JSON.stringify(req.body));
-            SqliteService.getTableNames(sqliteFile)
+            this.sqliteService.getTableNames(sqliteFile)
                 .then((names) => {
                     res.json({ results: names });
                 })
