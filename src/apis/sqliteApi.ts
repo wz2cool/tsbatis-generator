@@ -36,6 +36,19 @@ export class SqliteApi {
                 });
         });
 
+        sqliteApi.post("/generateEntities", (req, res, next) => {
+            const sqliteFile = req.body.sqliteFile;
+            const tableName = req.body.tableName;
+            this.sqliteService.generateTableEntity(sqliteFile, tableName)
+                .then((infos) => {
+                    res.json({ results: infos });
+                })
+                .catch((e) => {
+                    res.status(500);
+                    res.json({ error: e.message });
+                });
+        });
+
         return sqliteApi;
     }
 }
