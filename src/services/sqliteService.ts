@@ -2,11 +2,13 @@ import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
 import { ConnectionFactory, SqliteConnectionConfig } from "tsbatis";
+import * as util from "util";
 import { TableInfo, TableName } from "../db/entity/view";
 
 export class SqliteService {
     public async getTableNames(sqliteFile: string): Promise<string[]> {
         try {
+            await this.checkParamEmpty("sqliteFile", sqliteFile);
             await this.checkFileExists(sqliteFile);
             const config = new SqliteConnectionConfig();
             config.filepath = sqliteFile;
@@ -23,6 +25,8 @@ export class SqliteService {
 
     public async getTableInfos(sqliteFile: string, tableName: string): Promise<TableInfo[]> {
         try {
+            await this.checkParamEmpty("sqliteFile", sqliteFile);
+            await this.checkParamEmpty("tableName", tableName);
             await this.checkFileExists(sqliteFile);
             const config = new SqliteConnectionConfig();
             config.filepath = sqliteFile;
@@ -45,6 +49,16 @@ export class SqliteService {
                     reject(new Error(`can not find file: "${sqliteFile}"`));
                 }
             });
+        });
+    }
+
+    private checkParamEmpty(paramName: string, paramValue: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (util.isNullOrUndefined(paramValue)) {
+                reject(new Error(`"${paramName}" can not be empty!`));
+            } else {
+                resolve();
+            }
         });
     }
 }

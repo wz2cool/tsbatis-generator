@@ -11,7 +11,7 @@ export class SqliteApi {
         });
 
         sqliteApi.post("/getTableNames", (req, res, next) => {
-            const sqliteFile = req.body.file;
+            const sqliteFile = req.body.sqliteFile;
             console.log(JSON.stringify(req.body));
             this.sqliteService.getTableNames(sqliteFile)
                 .then((names) => {
@@ -19,9 +19,23 @@ export class SqliteApi {
                 })
                 .catch((e) => {
                     res.status(500);
-                    res.json({ error: e });
+                    res.json({ error: e.message });
                 });
         });
+
+        sqliteApi.post("/getTableInfos", (req, res, next) => {
+            const sqliteFile = req.body.sqliteFile;
+            const tableName = req.body.tableName;
+            this.sqliteService.getTableInfos(sqliteFile, tableName)
+                .then((infos) => {
+                    res.json({ results: infos });
+                })
+                .catch((e) => {
+                    res.status(500);
+                    res.json({ error: e.message });
+                });
+        });
+
         return sqliteApi;
     }
 }
