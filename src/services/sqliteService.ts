@@ -1,9 +1,11 @@
 import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
-import { ConnectionFactory, SqliteConnectionConfig } from "tsbatis";
+import { ConnectionFactory, DynamicQuery, SqliteConnectionConfig } from "tsbatis";
 import * as util from "util";
-import { TableInfo, TableName } from "../db/entity/view";
+import { SqliteMaster } from "../db/entity/table";
+import { ColumnInfo, TableName } from "../db/entity/view";
+import { SqliteMasterMapper } from "../db/mapper";
 
 export class SqliteService {
     public async getTableNames(sqliteFile: string): Promise<string[]> {
@@ -14,16 +16,16 @@ export class SqliteService {
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
             const connection = await connectionFactory.getConnection();
-            const tableNames = await connection.selectEntities<TableName>(
-                TableName, "SELECT name FROM sqlite_master WHERE type='table'", []);
-            const result = lodash.map(tableNames, (x) => x.name);
+            const sqliteMasterMapper = new SqliteMasterMapper(connection);
+            const sqliteMasters = await sqliteMasterMapper.selectByDynamicQuery(new DynamicQuery());
+            const result = lodash.map(sqliteMasters, (x) => x.tblName);
             return result;
         } catch (e) {
             return new Promise<string[]>((resolve, reject) => reject(e));
         }
     }
 
-    public async getTableInfos(sqliteFile: string, tableName: string): Promise<TableInfo[]> {
+    public async getColumnInfos(sqliteFile: string, tableName: string): Promise<ColumnInfo[]> {
         try {
             await this.checkParamEmpty("sqliteFile", sqliteFile);
             await this.checkParamEmpty("tableName", tableName);
@@ -32,11 +34,22 @@ export class SqliteService {
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
             const connection = await connectionFactory.getConnection();
-            const tableInfos = await connection.selectEntities<TableInfo>(
-                TableInfo, `PRAGMA table_info ("${tableName}");`, []);
+            const tableInfos = await connection.selectEntities<ColumnInfo>(
+                ColumnInfo, `PRAGMA table_info ("${tableName}")`, []);
             return tableInfos;
         } catch (e) {
-            return new Promise<TableInfo[]>((resolve, reject) => reject(e));
+            return new Promise<ColumnInfo[]>((resolve, reject) => reject(e));
+        }
+    }
+
+    private async generateTableEntity(sqliteFile: string, tableName: string): Promise<string> {
+        try {
+            const columInfos = await this.getColumnInfos(sqliteFile, tableName);
+            columInfos.forEach((col) => {
+
+            });
+        } catch (e) {
+            return new Promise<string>((resolve, reject) => reject(e));
         }
     }
 

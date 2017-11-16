@@ -23,10 +23,10 @@ export class SqliteApi {
                 });
         });
 
-        sqliteApi.post("/getTableInfos", (req, res, next) => {
+        sqliteApi.post("/getColumnInfos", (req, res, next) => {
             const sqliteFile = req.body.sqliteFile;
             const tableName = req.body.tableName;
-            this.sqliteService.getTableInfos(sqliteFile, tableName)
+            this.sqliteService.getColumnInfos(sqliteFile, tableName)
                 .then((infos) => {
                     res.json({ results: infos });
                 })

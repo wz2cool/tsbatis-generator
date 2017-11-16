@@ -1,4 +1,4 @@
-import { TableInfo } from "./tableInfo";
+import { ColumnInfo } from "./columnInfo";
 import { TableName } from "./tableName";
 
-export { TableName, TableInfo };
+export { TableName, ColumnInfo };
