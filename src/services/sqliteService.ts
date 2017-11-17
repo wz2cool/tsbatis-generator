@@ -69,12 +69,13 @@ export class SqliteService {
 
             const columInfos = await this.getColumnInfos(sqliteFile, tableName);
             let result = "";
-            columInfos.forEach((col) => {
-                const columnName = col.name;
-                const tsType = this.convertToTsType(col.type);
-                console.log(`columnName: ${columnName}`);
+            for (const colInfo of columInfos) {
+                const tsProp = lodash.camelCase(colInfo.name);
+                const tsType = this.convertToTsType(colInfo.type);
+                console.log(`tsProp: ${tsProp}`);
                 console.log(`tsType: ${tsType}`);
-            });
+            }
+
             return new Promise<string>((resolve, reject) => resolve(result));
         } catch (e) {
             return new Promise<string>((resolve, reject) => reject(e));
