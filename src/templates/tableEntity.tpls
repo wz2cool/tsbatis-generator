@@ -1,9 +1,0 @@
-import { column, TableEntity } from "tsbatis";
-
-export class ${entityName} extends TableEntity {
-    ${props}
-
-    public getTableName(): string {
-        return "${tableName}";
-    }
-}

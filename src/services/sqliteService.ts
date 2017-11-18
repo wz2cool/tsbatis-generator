@@ -1,12 +1,13 @@
 import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
-import { ConnectionFactory, DynamicQuery, SqliteConnectionConfig } from "tsbatis";
+import { ConnectionFactory, DynamicQuery, SqliteConnectionConfig, ColumnInfo, column } from "tsbatis";
 import * as util from "util";
 import { SqliteMaster } from "../db/entity/table";
-import { ColumnInfo, TableName } from "../db/entity/view";
+import { DbColumnInfo, TableName } from "../db/entity/view";
 import { SqliteMasterMapper } from "../db/mapper";
 import { FilterDescriptor, FilterOperator } from "tsbatis/dist/model";
+import { TemplateHelper } from "../helpers";
 
 export class SqliteService {
     private numberTypes = ["INT", "INTEGER", "TINYINT", "SMALLINT", "MEDIUMINT", "BIGINT", "UNSIGNED BIGINT", "INT2", "INT8",
@@ -15,7 +16,6 @@ export class SqliteService {
     private stringTypes = ["CHAR", "VARCHAR", "VARYING CHARACTER", "NCHAR", "NATIVE CHARACTER", "NVARCHAR", "TEXT", "CLOB"];
     private booleanTypes = ["BOOLEAN"];
     private dateTypes = ["DATE", "DATETIME"];
-
 
     public async getTableNames(sqliteFile: string): Promise<string[]> {
         try {
@@ -34,7 +34,7 @@ export class SqliteService {
         }
     }
 
-    public async getColumnInfos(sqliteFile: string, tableName: string): Promise<ColumnInfo[]> {
+    public async getDbColumnInfos(sqliteFile: string, tableName: string): Promise<DbColumnInfo[]> {
         try {
             await this.checkParamEmpty("sqliteFile", sqliteFile);
             await this.checkParamEmpty("tableName", tableName);
@@ -43,11 +43,11 @@ export class SqliteService {
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
             const connection = await connectionFactory.getConnection();
-            const tableInfos = await connection.selectEntities<ColumnInfo>(
-                ColumnInfo, `PRAGMA table_info ("${tableName}")`, []);
+            const tableInfos = await connection.selectEntities<DbColumnInfo>(
+                DbColumnInfo, `PRAGMA table_info ("${tableName}")`, []);
             return tableInfos;
         } catch (e) {
-            return new Promise<ColumnInfo[]>((resolve, reject) => reject(e));
+            return new Promise<DbColumnInfo[]>((resolve, reject) => reject(e));
         }
     }
 
@@ -67,15 +67,25 @@ export class SqliteService {
             const createTableSql = sqliteMasters[0].sql;
             const autoIncrease = createTableSql.toLowerCase().indexOf("autoincrement") >= 0;
 
-            const columInfos = await this.getColumnInfos(sqliteFile, tableName);
-            let result = "";
-            for (const colInfo of columInfos) {
-                const tsProp = lodash.camelCase(colInfo.name);
-                const tsType = this.convertToTsType(colInfo.type);
-                console.log(`tsProp: ${tsProp}`);
-                console.log(`tsType: ${tsType}`);
+            const dbColumInfos = await this.getDbColumnInfos(sqliteFile, tableName);
+            const columnInfos: ColumnInfo[] = [];
+            for (const dbColInfo of dbColumInfos) {
+                const columnInfo = new ColumnInfo();
+                const tsProp = lodash.camelCase(dbColInfo.name);
+                const tsType = this.convertToTsType(dbColInfo.type);
+                columnInfo.columnName = dbColInfo.name;
+                columnInfo.property = tsProp;
+                columnInfo.propertyType = tsType;
+                columnInfo.isKey = dbColInfo.pk > 0;
+                if (columnInfo.isKey) {
+                    columnInfo.insertable = !autoIncrease;
+                } else {
+                    columnInfo.insertable = false;
+                }
+                columnInfos.push(columnInfo);
             }
 
+            const result = TemplateHelper.generateTableEntity(tableName, columnInfos);
             return new Promise<string>((resolve, reject) => resolve(result));
         } catch (e) {
             return new Promise<string>((resolve, reject) => reject(e));

@@ -1,2 +1,0 @@
-@column("${colName}", ${isPrimaryKey}, ${insertable})
-public ${propName}: ${propType};

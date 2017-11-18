@@ -1,6 +1,6 @@
 import { column, Entity } from "tsbatis";
 
-export class ColumnInfo extends Entity {
+export class DbColumnInfo extends Entity {
     @column("cid")
     public cid: number;
     @column("name")
