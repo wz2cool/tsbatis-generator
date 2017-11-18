@@ -38,11 +38,10 @@ export class SqliteApi {
 
         sqliteApi.post("/generateEntities", (req, res, next) => {
             const sqliteFile = req.body.sqliteFile;
-            const tableName = req.body.tableName;
-            this.sqliteService.generateTableEntity(sqliteFile, tableName)
-                .then((fileInfo) => {
-                    res.set({ "Content-Disposition": `attachment; filename="${fileInfo.fileName}"` });
-                    res.send(fileInfo.content);
+            const tableNames = req.body.tableNames;
+            this.sqliteService.generateTableEntitiesZipFile(sqliteFile, tableNames)
+                .then((zipFile) => {
+                    res.download(zipFile);
                 })
                 .catch((e) => {
                     res.status(500);

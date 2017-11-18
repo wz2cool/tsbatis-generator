@@ -1,20 +1,29 @@
 import * as fs from "fs";
 import * as lodash from "lodash";
 import * as path from "path";
-import { ConnectionFactory, DynamicQuery, SqliteConnectionConfig, ColumnInfo, column } from "tsbatis";
+import {
+    column,
+    ColumnInfo,
+    ConnectionFactory,
+    DynamicQuery,
+    FilterDescriptor,
+    FilterOperator,
+    SqliteConnectionConfig,
+} from "tsbatis";
 import * as util from "util";
 import { SqliteMaster } from "../db/entity/table";
 import { DbColumnInfo, TableName } from "../db/entity/view";
 import { SqliteMasterMapper } from "../db/mapper";
-import { FilterDescriptor, FilterOperator } from "tsbatis/dist/model";
-import { TemplateHelper } from "../helpers";
+import { CompressHelper, TemplateHelper } from "../helpers";
 import { TextFileInfo } from "../models";
 
 export class SqliteService {
-    private numberTypes = ["INT", "INTEGER", "TINYINT", "SMALLINT", "MEDIUMINT", "BIGINT", "UNSIGNED BIGINT", "INT2", "INT8",
+    private numberTypes = ["INT", "INTEGER", "TINYINT", "SMALLINT",
+        "MEDIUMINT", "BIGINT", "UNSIGNED BIGINT", "INT2", "INT8",
         "REAL", "DOUBLE", "DOUBLE PRECISION", "FLOAT",
         "NUMERIC", "DECIMAL"];
-    private stringTypes = ["CHAR", "VARCHAR", "VARYING CHARACTER", "NCHAR", "NATIVE CHARACTER", "NVARCHAR", "TEXT", "CLOB"];
+    private stringTypes = ["CHAR", "VARCHAR", "VARYING CHARACTER", "NCHAR",
+        "NATIVE CHARACTER", "NVARCHAR", "TEXT", "CLOB"];
     private booleanTypes = ["BOOLEAN"];
     private dateTypes = ["DATE", "DATETIME"];
 
@@ -52,6 +61,29 @@ export class SqliteService {
         }
     }
 
+    public async generateTableEntitiesZipFile(sqliteFile: string, tableNames: string[]): Promise<string> {
+        try {
+            const textFileInfos = await this.generateTableEntities(sqliteFile, tableNames);
+            const zipFile = await CompressHelper.compressTextFile(textFileInfos);
+            return new Promise<string>((resolve, reject) => resolve(zipFile));
+        } catch (e) {
+            return new Promise<string>((resolve, reject) => reject(e));
+        }
+    }
+
+    public async generateTableEntities(sqliteFile: string, tableNames: string[]): Promise<TextFileInfo[]> {
+        try {
+            const result: TextFileInfo[] = [];
+            for (const tableName of tableNames) {
+                const textFileInfo = await this.generateTableEntity(sqliteFile, tableName);
+                result.push(textFileInfo);
+            }
+            return new Promise<TextFileInfo[]>((resolve, reject) => resolve(result));
+        } catch (e) {
+            return new Promise<TextFileInfo[]>((resolve, reject) => reject(e));
+        }
+    }
+
     public async generateTableEntity(sqliteFile: string, tableName: string): Promise<TextFileInfo> {
         try {
             const config = new SqliteConnectionConfig();
@@ -63,7 +95,8 @@ export class SqliteService {
             const query = DynamicQuery.createIntance<SqliteMaster>().addFilters(tableFilter);
             const sqliteMasters = await sqliteMasterMapper.selectByDynamicQuery(query);
             if (sqliteMasters.length === 0) {
-                return new Promise<TextFileInfo>((resolve, reject) => reject(new Error(`cannot find table: "${tableName}"`)));
+                return new Promise<TextFileInfo>((resolve, reject) =>
+                    reject(new Error(`cannot find table: "${tableName}"`)));
             }
             const createTableSql = sqliteMasters[0].sql;
             const autoIncrease = createTableSql.toLowerCase().indexOf("autoincrement") >= 0;
@@ -78,11 +111,7 @@ export class SqliteService {
                 columnInfo.property = tsProp;
                 columnInfo.propertyType = tsType;
                 columnInfo.isKey = dbColInfo.pk > 0;
-                if (columnInfo.isKey) {
-                    columnInfo.insertable = !autoIncrease;
-                } else {
-                    columnInfo.insertable = false;
-                }
+                columnInfo.insertable = columnInfo.isKey ? !autoIncrease : false;
                 columnInfos.push(columnInfo);
             }
 

@@ -1,3 +1,4 @@
+import { CompressHelper } from "./compressHelper";
 import { TemplateHelper } from "./templateHelper";
 
-export { TemplateHelper };
+export { TemplateHelper, CompressHelper };
