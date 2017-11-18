@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as path from "path";
 import { SqliteService } from "../services/sqliteService";
 
 export class SqliteApi {
@@ -41,7 +42,7 @@ export class SqliteApi {
             const tableNames = req.body.tableNames;
             this.sqliteService.generateTableEntitiesZipFile(sqliteFile, tableNames)
                 .then((zipFile) => {
-                    res.download(zipFile);
+                    res.download(zipFile, path.basename(zipFile));
                 })
                 .catch((e) => {
                     res.status(500);
