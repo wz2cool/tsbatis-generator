@@ -8,6 +8,7 @@ import { DbColumnInfo, TableName } from "../db/entity/view";
 import { SqliteMasterMapper } from "../db/mapper";
 import { FilterDescriptor, FilterOperator } from "tsbatis/dist/model";
 import { TemplateHelper } from "../helpers";
+import { TextFileInfo } from "../models";
 
 export class SqliteService {
     private numberTypes = ["INT", "INTEGER", "TINYINT", "SMALLINT", "MEDIUMINT", "BIGINT", "UNSIGNED BIGINT", "INT2", "INT8",
@@ -51,7 +52,7 @@ export class SqliteService {
         }
     }
 
-    public async generateTableEntity(sqliteFile: string, tableName: string): Promise<string> {
+    public async generateTableEntity(sqliteFile: string, tableName: string): Promise<TextFileInfo> {
         try {
             const config = new SqliteConnectionConfig();
             config.filepath = sqliteFile;
@@ -62,7 +63,7 @@ export class SqliteService {
             const query = DynamicQuery.createIntance<SqliteMaster>().addFilters(tableFilter);
             const sqliteMasters = await sqliteMasterMapper.selectByDynamicQuery(query);
             if (sqliteMasters.length === 0) {
-                return new Promise<string>((resolve, reject) => reject(new Error(`cannot find table: "${tableName}"`)));
+                return new Promise<TextFileInfo>((resolve, reject) => reject(new Error(`cannot find table: "${tableName}"`)));
             }
             const createTableSql = sqliteMasters[0].sql;
             const autoIncrease = createTableSql.toLowerCase().indexOf("autoincrement") >= 0;
@@ -85,10 +86,13 @@ export class SqliteService {
                 columnInfos.push(columnInfo);
             }
 
-            const result = TemplateHelper.generateTableEntity(tableName, columnInfos);
-            return new Promise<string>((resolve, reject) => resolve(result));
+            const content = TemplateHelper.generateTableEntity(tableName, columnInfos);
+            const textFileInfo = new TextFileInfo();
+            textFileInfo.fileName = lodash.camelCase(tableName) + ".ts";
+            textFileInfo.content = content;
+            return new Promise<TextFileInfo>((resolve, reject) => resolve(textFileInfo));
         } catch (e) {
-            return new Promise<string>((resolve, reject) => reject(e));
+            return new Promise<TextFileInfo>((resolve, reject) => reject(e));
         }
     }
 

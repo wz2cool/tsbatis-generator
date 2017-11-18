@@ -3,7 +3,8 @@ import * as lodash from "lodash";
 
 export class TemplateHelper {
     public static generateTableEntity(tableName: string, columnInfos: ColumnInfo[]): string {
-        const entityName = lodash.camelCase(tableName);
+        const entityNameTemp = lodash.camelCase(tableName);
+        const entityName = entityNameTemp.substring(0, 1).toUpperCase() + entityNameTemp.substring(1, entityNameTemp.length);
         const properties = TemplateHelper.generateProperties(columnInfos);
         const result =
             `import { column, TableEntity } from "tsbatis"\r\n` +

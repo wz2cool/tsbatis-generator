@@ -40,8 +40,9 @@ export class SqliteApi {
             const sqliteFile = req.body.sqliteFile;
             const tableName = req.body.tableName;
             this.sqliteService.generateTableEntity(sqliteFile, tableName)
-                .then((infos) => {
-                    res.json({ results: infos });
+                .then((fileInfo) => {
+                    res.set({ "Content-Disposition": `attachment; filename="${fileInfo.fileName}"` });
+                    res.send(fileInfo.content);
                 })
                 .catch((e) => {
                     res.status(500);
