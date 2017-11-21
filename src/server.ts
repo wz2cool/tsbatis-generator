@@ -1,5 +1,6 @@
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
+import * as cors from "cors";
 import * as ejs from "ejs";
 import * as express from "express";
 import * as logger from "morgan";
@@ -33,6 +34,8 @@ export class Server {
         this.app.use(cookieParser());
         this.app.use(express.static(path.join(__dirname, "public")));
         this.app.use(logger("dev"));
+
+        this.app.use(cors({credentials: true, origin: true}));
 
         this.routes();
         this.apis();

@@ -49,13 +49,12 @@
                     };
                 }
 
-                $http(httpParams)
-                    .success(function (data) {
-                        deferred.resolve(data);
-                    })
-                    .error(function (data, status) {
-                        deferred.reject(data);
-                    });
+                $http(httpParams).then(function (data) {
+                    deferred.resolve(data);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+
                 return deferred.promise;
             }
 
@@ -77,10 +76,10 @@
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
                     }
-                }).success(function (data) {
+                }).then(function (data) {
                     deferred.resolve(data);
-                }).error(function (data, status) {
-                    deferred.reject(data);
+                }, function (error) {
+                    deferred.reject(error);
                 });
                 return deferred.promise;
             }
