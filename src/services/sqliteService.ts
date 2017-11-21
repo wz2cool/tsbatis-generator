@@ -37,7 +37,7 @@ export class SqliteService {
             const connection = await connectionFactory.getConnection();
             const sqliteMasterMapper = new SqliteMasterMapper(connection);
             const sqliteMasters = await sqliteMasterMapper.selectByDynamicQuery(new DynamicQuery());
-            const result = lodash.map(sqliteMasters, (x) => x.tblName);
+            const result = lodash.uniq(lodash.map(sqliteMasters, (x) => x.tblName));
             return result;
         } catch (e) {
             return new Promise<string[]>((resolve, reject) => reject(e));

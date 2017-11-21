@@ -16,7 +16,7 @@ export class SqliteApi {
             console.log(JSON.stringify(req.body));
             this.sqliteService.getTableNames(sqliteFile)
                 .then((names) => {
-                    res.json({ results: names });
+                    res.json(names);
                 })
                 .catch((e) => {
                     res.status(500);

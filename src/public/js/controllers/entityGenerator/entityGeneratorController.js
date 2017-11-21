@@ -11,17 +11,20 @@
                 }
 
                 sqliteHttpService.getTableNames($scope.config.sqliteFile)
-                    .then(function (data) {
+                    .then(function (response) {
                         $uibModal.open({
                             animation: true,
                             ariaLabelledBy: 'modal-title-top',
                             ariaDescribedBy: 'modal-body-top',
                             templateUrl: 'views/entityGenerator/selectEntityModal.html',
-                            size: 'sm',
+                            size: 'md',
                             controller: 'selectEntityModalController',
                             resolve: {
                                 context: function () {
-                                    return {};
+                                    return {
+                                        tables: response.data,
+                                        sqliteFile: $scope.config.sqliteFile
+                                    };
                                 }
                             }
                         });

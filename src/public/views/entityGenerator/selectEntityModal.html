@@ -1,17 +1,18 @@
 <div>
     <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+        <h3 class="modal-title" id="modal-title">Export Entities</h3>
     </div>
     <div class="modal-body" id="modal-body">
-        <ul>
-            <li ng-repeat="item in $ctrl.items">
-                <a href="#" ng-click="$event.preventDefault(); $ctrl.selected.item = item">{{ item }}</a>
-            </li>
-        </ul>
-        Selected: <b>{{ $ctrl.selected.item }}</b>
+        <div style="height: 300px; overflow-y: auto">
+            <div ng-repeat="item in tables track by $index">
+                <div class="horizontal-container fill-right">
+                    <label><input type="checkbox" ng-model="item.isSelected"/> {{::item.name}}</label>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()">Export</button>
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </div>
