@@ -53,9 +53,9 @@ export class SqliteService {
             config.filepath = sqliteFile;
             const connectionFactory = new ConnectionFactory(config, true);
             const connection = await connectionFactory.getConnection();
-            const tableInfos = await connection.selectEntities<DbColumnInfo>(
+            const dbColumnInfos = await connection.selectEntities<DbColumnInfo>(
                 DbColumnInfo, `PRAGMA table_info ("${tableName}")`, []);
-            return tableInfos;
+            return dbColumnInfos;
         } catch (e) {
             return new Promise<DbColumnInfo[]>((resolve, reject) => reject(e));
         }

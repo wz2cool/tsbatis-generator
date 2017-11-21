@@ -11,6 +11,7 @@ import {
 } from "tsbatis";
 import * as util from "util";
 import { MysqlTableInfo } from "../db/entity/table";
+import { DbColumnInfo } from "../db/entity/view";
 import { MysqlTableInfoMapper } from "../db/mapper";
 
 export class MysqlService {
@@ -42,6 +43,38 @@ export class MysqlService {
             return result;
         } catch (e) {
             return new Promise<string[]>((resolve, reject) => reject(e));
+        }
+    }
+
+    public async getDbColumnInfos(
+        uri: string, user: string, pwd: string, database: string, tableName: string): Promise<DbColumnInfo[]> {
+        try {
+            await this.checkParamEmpty("uri", uri);
+            await this.checkParamEmpty("user", user);
+            await this.checkParamEmpty("pwd", pwd);
+            await this.checkParamEmpty("database", database);
+            await this.checkParamEmpty("tableName", tableName);
+            const uriInfos = uri.split(":");
+            const host = uriInfos[0];
+            const port = uriInfos[1];
+            const config = new MysqlConnectionConfig();
+            config.host = host;
+            config.port = Number.parseInt(port);
+            config.user = user;
+            config.password = pwd;
+            config.database = database;
+
+            const sql = `SELECT COLUMN_NAME AS name, DATA_TYPE AS type, ` +
+                `(CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END) AS pk ` +
+                `FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${database}' AND TABLE_NAME = '${tableName}'`;
+
+            const connectionFactory = new ConnectionFactory(config, true);
+            const connection = await connectionFactory.getConnection();
+            const dbColumnInfos = await connection.selectEntities<DbColumnInfo>(
+                DbColumnInfo, sql, []);
+            return dbColumnInfos;
+        } catch (e) {
+            return new Promise<DbColumnInfo[]>((resolve, reject) => reject(e));
         }
     }
 

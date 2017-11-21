@@ -27,18 +27,21 @@ export class MysqlApi {
                 });
         });
 
-        // mysqlApi.post("/getColumnInfos", (req, res, next) => {
-        //     const sqliteFile = req.body.sqliteFile;
-        //     const tableName = req.body.tableName;
-        //     this.mysqlService.getDbColumnInfos(sqliteFile, tableName)
-        //         .then((infos) => {
-        //             res.json({ results: infos });
-        //         })
-        //         .catch((e) => {
-        //             res.status(500);
-        //             res.json({ error: e.message });
-        //         });
-        // });
+        mysqlApi.post("/getColumnInfos", (req, res, next) => {
+            const uri = req.body.uri;
+            const user = req.body.user;
+            const pwd = req.body.pwd;
+            const database = req.body.database;
+            const tableName = req.body.tableName;
+            this.mysqlService.getDbColumnInfos(uri, user, pwd, database, tableName)
+                .then((infos) => {
+                    res.json({ results: infos });
+                })
+                .catch((e) => {
+                    res.status(500);
+                    res.json({ error: e.message });
+                });
+        });
 
         // mysqlApi.post("/generateEntities", (req, res, next) => {
         //     const sqliteFile = req.body.sqliteFile;
