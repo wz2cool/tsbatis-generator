@@ -1,3 +1,4 @@
+import { MysqlTableInfoMapper } from "./mysqlTableInfoMapper";
 import { SqliteMasterMapper } from "./sqliteMasterMapper";
 
-export { SqliteMasterMapper };
+export { MysqlTableInfoMapper, SqliteMasterMapper };

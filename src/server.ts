@@ -35,7 +35,7 @@ export class Server {
         this.app.use(express.static(path.join(__dirname, "public")));
         this.app.use(logger("dev"));
 
-        this.app.use(cors({credentials: true, origin: true}));
+        this.app.use(cors({ credentials: true, origin: true }));
 
         this.routes();
         this.apis();
@@ -69,6 +69,7 @@ export class Server {
         // visit: http://localhost:3000/api/users
         this.app.use("/users", apis.UserApi.getRoute());
         this.app.use("/sqlite", new apis.SqliteApi().getRoute());
+        this.app.use("/mysql", new apis.MysqlApi().getRoute());
     }
 
     private swagger(): void {

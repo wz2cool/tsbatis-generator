@@ -43,23 +43,34 @@
         <div class="panel-body">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <li class="fa fa-database" aria-hidden="true"></li>
+                    <i class="fa fa-link" aria-hidden="true"></i>
                 </span>
-                <input type="text" class="form-control" placeholder="[host / ip]:[port]">
+                <input type="text" class="form-control" placeholder="[host/ip]:[port]"
+                       ng-model="config.uri">
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon">
                     <li class="fa fa-user" aria-hidden="true"></li>
                 </span>
-                <input type="text" class="form-control" placeholder="user name">
+                <input type="text" class="form-control" placeholder="user name"
+                       ng-model="config.user">
             </div>
             <br>
             <div class="input-group">
                 <span class="input-group-addon">
                     <li class="fa fa-key" aria-hidden="true"></li>
                 </span>
-                <input type="password" class="form-control" placeholder="password">
+                <input type="password" class="form-control" placeholder="password"
+                       ng-model="config.pwd">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <li class="fa fa-database" aria-hidden="true"></li>
+                </span>
+                <input type="text" class="form-control" placeholder="database"
+                       ng-model="config.database">
             </div>
             <br>
             <div class="input-group">
@@ -67,6 +78,7 @@
                        value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connect&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
                        ng-click="connect()">
             </div>
+
         </div>
     </div>
 </div>

@@ -1,3 +1,4 @@
+import { MysqlTableInfo } from "./mysqlTableInfo";
 import { SqliteMaster } from "./sqliteMaster";
 
-export { SqliteMaster };
+export { SqliteMaster, MysqlTableInfo };

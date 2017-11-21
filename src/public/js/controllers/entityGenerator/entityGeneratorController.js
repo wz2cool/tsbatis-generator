@@ -5,12 +5,31 @@
             $scope.config = {};
 
             $scope.connect = function () {
-                if (!$scope.config.sqliteFile) {
+
+                if ($scope.dbType === 'sqlite') {
+                    connectSqlite($scope.config.sqliteFile);
+                } else {
+
+                }
+
+            };
+
+            function connectMysql(uri, user, pwd, database) {
+                if (!uri || !user || !pwd || !database) {
+                    alert('Please finish form!');
+                    return;
+                }
+
+
+            }
+
+            function connectSqlite(sqliteFile) {
+                if (!sqliteFile) {
                     alert('Please input file path!');
                     return;
                 }
 
-                sqliteHttpService.getTableNames($scope.config.sqliteFile)
+                sqliteHttpService.getTableNames(sqliteFile)
                     .then(function (response) {
                         $uibModal.open({
                             animation: true,
@@ -23,7 +42,7 @@
                                 context: function () {
                                     return {
                                         tables: response.data,
-                                        sqliteFile: $scope.config.sqliteFile
+                                        sqliteFile: sqliteFile
                                     };
                                 }
                             }
