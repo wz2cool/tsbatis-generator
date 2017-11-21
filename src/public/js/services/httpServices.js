@@ -27,7 +27,7 @@
                 return _queryData('PUT', url, params);
             }
 
-            function _queryData(method, url, params) {
+            function _queryData(method, url, params, responseType) {
                 var deferred = $q.defer();
                 var httpParams = {};
                 if (method === 'GET') {
@@ -49,6 +49,10 @@
                     };
                 }
 
+                if (responseType) {
+                    httpParams.responseType = responseType;
+                }
+
                 $http(httpParams).then(function (data) {
                     deferred.resolve(data);
                 }, function (error) {
@@ -58,17 +62,18 @@
                 return deferred.promise;
             }
 
-            function _postJson(url, data) {
-                return _queryJson('POST', url, data);
+            function _postJson(url, data, responseType) {
+                return _queryJson('POST', url, data, responseType);
             }
 
             function _putJson(url, data) {
                 return _queryJson('PUT', url, data);
             }
 
-            function _queryJson(method, url, params) {
+            function _queryJson(method, url, params, responseType) {
                 var deferred = $q.defer();
-                $http({
+
+                var httpParam = {
                     method: method,
                     url: url,
                     data: params,
@@ -76,7 +81,13 @@
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
                     }
-                }).then(function (data) {
+                };
+
+                if (responseType) {
+                    httpParam.responseType = responseType;
+                }
+
+                $http(httpParam).then(function (data) {
                     deferred.resolve(data);
                 }, function (error) {
                     deferred.reject(error);
