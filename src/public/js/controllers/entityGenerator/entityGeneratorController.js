@@ -1,11 +1,16 @@
 (function () {
     'use strict';
     angular.module('myApp').controller('entityGeneratorController',
-        ['$scope', '$uibModal', 'httpService', function ($scope, $uibModal, httpService) {
-            $scope.sqliteFile = '';
+        ['$scope', '$uibModal', 'sqliteHttpService', function ($scope, $uibModal, sqliteHttpService) {
+            $scope.config = {};
 
             $scope.connect = function () {
-                httpService.getTableNames($scope.sqliteFile)
+                if (!$scope.config.sqliteFile) {
+                    alert('Please input file path!');
+                    return;
+                }
+
+                sqliteHttpService.getTableNames($scope.config.sqliteFile)
                     .then(function (data) {
                         $uibModal.open({
                             animation: true,
