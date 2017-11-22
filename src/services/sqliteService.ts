@@ -111,7 +111,7 @@ export class SqliteService {
                 columnInfo.property = tsProp;
                 columnInfo.propertyType = tsType;
                 columnInfo.isKey = dbColInfo.pk > 0;
-                columnInfo.insertable = columnInfo.isKey ? !autoIncrease : false;
+                columnInfo.insertable = columnInfo.isKey ? !autoIncrease : true;
                 columnInfos.push(columnInfo);
             }
 

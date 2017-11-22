@@ -1,7 +1,9 @@
 (function () {
     angular.module('myApp').controller('selectEntityModalController',
-        ['$scope', '$uibModalInstance', 'sqliteHttpService', 'context',
-            function ($scope, $uibModalInstance, sqliteHttpService, context) {
+        ['$scope', '$uibModalInstance', 'sqliteHttpService', 'mysqlHttpService', 'context',
+            function ($scope, $uibModalInstance, sqliteHttpService, mysqlHttpService, context) {
+                var dbType = context.dbType;
+
                 $scope.tables = _.map(context.tables, function (x) {
                     return {isSelected: false, name: x}
                 });
@@ -17,18 +19,35 @@
                         }), function (item) {
                             return item.name;
                         });
-                    sqliteHttpService.generateEntities(context.sqliteFile, selectedTables)
-                        .then(function (response) {
-                            var blob = new Blob([response.data], {
-                                type: 'application/zip'
-                            });
 
-                            saveAs(blob, 'entities.zip');
-                            $uibModalInstance.close('ok');
-                        })
-                        .catch(function (err) {
-                            alert(err.data.error);
-                        });
+                    if (dbType === 'sqlite') {
+                        sqliteHttpService.generateEntities(context.sqliteFile, selectedTables)
+                            .then(function (response) {
+                                var blob = new Blob([response.data], {
+                                    type: 'application/zip'
+                                });
+
+                                saveAs(blob, 'entities.zip');
+                                $uibModalInstance.close('ok');
+                            })
+                            .catch(function (err) {
+                                alert(err.data.error);
+                            });
+                    } else {
+                        mysqlHttpService.generateEntities(
+                            context.uri, context.user, context.pwd, context.database, selectedTables)
+                            .then(function (response) {
+                                var blob = new Blob([response.data], {
+                                    type: 'application/zip'
+                                });
+
+                                saveAs(blob, 'entities.zip');
+                                $uibModalInstance.close('ok');
+                            })
+                            .catch(function (err) {
+                                alert(err.data.error);
+                            });
+                    }
                 };
 
                 $scope.cancel = function () {
