@@ -7,4 +7,6 @@ export class DbColumnInfo extends Entity {
     public type: string;
     @column("pk")
     public pk: number;
+    @column("auto_increment")
+    public autoIncrement: number;
 }

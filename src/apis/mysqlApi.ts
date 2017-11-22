@@ -43,18 +43,21 @@ export class MysqlApi {
                 });
         });
 
-        // mysqlApi.post("/generateEntities", (req, res, next) => {
-        //     const sqliteFile = req.body.sqliteFile;
-        //     const tableNames = req.body.tableNames;
-        //     this.mysqlService.generateTableEntitiesZipFile(sqliteFile, tableNames)
-        //         .then((zipFile) => {
-        //             res.download(zipFile, path.basename(zipFile));
-        //         })
-        //         .catch((e) => {
-        //             res.status(500);
-        //             res.json({ error: e.message });
-        //         });
-        // });
+        mysqlApi.post("/generateEntities", (req, res, next) => {
+            const uri = req.body.uri;
+            const user = req.body.user;
+            const pwd = req.body.pwd;
+            const database = req.body.database;
+            const tableNames = req.body.tableNames;
+            this.mysqlService.generateTableEntitiesZipFile(uri, user, pwd, database, tableNames)
+                .then((zipFile) => {
+                    res.download(zipFile, path.basename(zipFile));
+                })
+                .catch((e) => {
+                    res.status(500);
+                    res.json({ error: e.message });
+                });
+        });
 
         return mysqlApi;
     }
