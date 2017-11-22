@@ -8,7 +8,7 @@ export class TemplateHelper {
             entityNameTemp.substring(1, entityNameTemp.length);
         const properties = TemplateHelper.generateProperties(columnInfos);
         const result =
-            `import { column, TableEntity } from "tsbatis"\r\n` +
+            `import { column, TableEntity } from "tsbatis";\r\n` +
             `\r\n` +
             `export class ${entityName} extends TableEntity {\r\n` +
             `${properties}\r\n` +
