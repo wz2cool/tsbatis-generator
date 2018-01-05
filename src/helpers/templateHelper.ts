@@ -29,7 +29,7 @@ export class TemplateHelper {
 
     public static generateProperty(columnInfo: ColumnInfo): string {
         const result =
-            `    @column("${columnInfo.columnName}", ${columnInfo.isKey}, ${columnInfo.insertable})\r\n` +
+            `    @column("${columnInfo.columnName}", ${columnInfo.isPK}, ${columnInfo.autoIncrease})\r\n` +
             `    public ${columnInfo.property}: ${columnInfo.propertyType};\r\n`;
         return result;
     }

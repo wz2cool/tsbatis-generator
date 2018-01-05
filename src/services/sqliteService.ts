@@ -110,8 +110,8 @@ export class SqliteService {
                 columnInfo.columnName = dbColInfo.name;
                 columnInfo.property = tsProp;
                 columnInfo.propertyType = tsType;
-                columnInfo.isKey = dbColInfo.pk > 0;
-                columnInfo.insertable = columnInfo.isKey ? !autoIncrease : true;
+                columnInfo.isPK = dbColInfo.pk > 0;
+                columnInfo.autoIncrease = columnInfo.isPK ? autoIncrease : false;
                 columnInfos.push(columnInfo);
             }
 

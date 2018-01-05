@@ -36,7 +36,7 @@
     "sqlite3": "^3.1.13",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-express": "^1.0.7",
-    "tsbatis": "^0.0.20"
+    "tsbatis": "^0.1.0"
   },
   "devDependencies": {
     "@types/archiver": "^2.0.1",

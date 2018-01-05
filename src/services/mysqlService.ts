@@ -124,8 +124,8 @@ export class MysqlService {
                 columnInfo.columnName = dbColumInfo.name;
                 columnInfo.property = tsProp;
                 columnInfo.propertyType = tsType;
-                columnInfo.isKey = dbColumInfo.pk > 0 ? true : false;
-                columnInfo.insertable = dbColumInfo.autoIncrement > 0 ? false : true;
+                columnInfo.isPK = dbColumInfo.pk > 0 ? true : false;
+                columnInfo.autoIncrease = dbColumInfo.autoIncrement > 0 ? true : false;
                 columnInfos.push(columnInfo);
             }
 
