@@ -1,8 +1,9 @@
 import * as _ from "lodash";
 
-import { StringUtils } from "ts-commons";
+import { ArrayUtils, StringUtils } from "ts-commons";
 import { DatabaseType } from "tsbatis";
 import { DbColumnInfo } from "../db/entity/view";
+import { JavaType } from "../model/constant/JavaType";
 import { EntityFileInterpreterBase } from "./EntityFileInterpreterBase";
 import { ITypeInterpreter } from "./ITypeInterpreter";
 import { MysqlToJavaTypeInterpreter } from "./MysqlToJavaTypeInterpreter";
@@ -24,8 +25,24 @@ export class JavaEntityFileInterpreter extends EntityFileInterpreterBase {
     const className = _.startCase(_.camelCase(tableName.toLowerCase()));
     const privateFiledText = this.generatePriveFieldText(dbColumnInfos);
     const publicMothodText = this.genreatePublicMethodText(dbColumnInfos);
-    const result =
-      `import javax.persistence.*;\r\nimport java.sql.*;\r\n` +
+    const allJavaTypes = dbColumnInfos.map(x =>
+      this.typeInterpreter.interpret(x.type)
+    );
+    const needImportJavaMathPackage =
+      allJavaTypes.findIndex(x => x === JavaType.BIG_DECIMAL) > 0;
+    const sqlPackageTypes = [JavaType.DATE, JavaType.TIME, JavaType.TIMESTAMP];
+    const needImportSqlPacakge =
+      allJavaTypes.findIndex(x => ArrayUtils.contains(sqlPackageTypes, x)) > 0;
+
+    let result = "";
+    if (needImportJavaMathPackage) {
+      result += "import java.math.*;\r\n";
+    }
+    if (needImportSqlPacakge) {
+      result += "import java.sql.*;\r\n";
+    }
+    result +=
+      `import javax.persistence.*;\r\n` +
       `@Table(name = "${tableName}")\r\n` +
       `public class ${className} {\r\n${privateFiledText}${publicMothodText}`;
     return result;
