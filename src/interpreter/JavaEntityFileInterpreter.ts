@@ -42,9 +42,9 @@ export class JavaEntityFileInterpreter extends EntityFileInterpreterBase {
       result += "import java.sql.*;\r\n";
     }
     result +=
-      `import javax.persistence.*;\r\n` +
+      `import javax.persistence.*;\r\n\r\n` +
       `@Table(name = "${tableName}")\r\n` +
-      `public class ${className} {\r\n${privateFiledText}${publicMothodText}`;
+      `public class ${className} {\r\n${privateFiledText}\r\n${publicMothodText}}`;
     return result;
   }
 
@@ -71,14 +71,14 @@ export class JavaEntityFileInterpreter extends EntityFileInterpreterBase {
     for (const dbColumnInfo of dbColumnInfos) {
       const javaType = this.typeInterpreter.interpret(dbColumnInfo.type);
       const javaProperty = _.camelCase(dbColumnInfo.name.toLowerCase());
-
+      const startCaseJavaProperty = _.upperFirst(javaProperty);
       result +=
-        `${space}public ${javaType} get${javaProperty} {\r\n` +
+        `${space}public ${javaType} get${startCaseJavaProperty}() {\r\n` +
         `${space}${space}return ${javaProperty};\r\n` +
         `${space}}\r\n\r\n`;
 
       result +=
-        `${space}public void set${javaProperty} {\r\n` +
+        `${space}public void set${startCaseJavaProperty}(${javaType} ${javaProperty}) {\r\n` +
         `${space}${space}this.${javaProperty} = ${javaProperty};\r\n` +
         `${space}}\r\n\r\n`;
     }

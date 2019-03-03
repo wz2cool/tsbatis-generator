@@ -1,8 +1,9 @@
-import * as lodash from "lodash";
+import * as _ from "lodash";
 import {
   column,
   ColumnInfo,
   ConnectionFactory,
+  DatabaseType,
   DynamicQuery,
   FilterCondition,
   FilterDescriptor,
@@ -14,6 +15,7 @@ import { MysqlTableInfo } from "../db/entity/table";
 import { DbColumnInfo } from "../db/entity/view";
 import { MysqlTableInfoMapper } from "../db/mapper";
 import { CompressHelper, TemplateHelper } from "../helpers";
+import { JavaEntityFileInterpreter } from "../interpreter/JavaEntityFileInterpreter";
 import { TextFileInfo } from "../model";
 
 export class MysqlService {
@@ -80,8 +82,9 @@ export class MysqlService {
       const mysqlTableInfos = await mysqlTableInfoMapper.selectByDynamicQuery(
         query
       );
-      const result = lodash.uniq(lodash.map(mysqlTableInfos, x => x.tableName));
+      const result = _.uniq(_.map(mysqlTableInfos, x => x.tableName));
       return result;
+      _;
     } catch (e) {
       return new Promise<string[]>((resolve, reject) => reject(e));
     }
@@ -191,25 +194,32 @@ export class MysqlService {
         database,
         tableName
       );
-      const columnInfos: ColumnInfo[] = [];
-      for (const dbColumInfo of dbColumInfos) {
-        const columnInfo = new ColumnInfo();
-        const tsProp = lodash.camelCase(dbColumInfo.name);
-        const tsType = this.convertToTsType(dbColumInfo.type);
-        columnInfo.columnName = dbColumInfo.name;
-        columnInfo.property = tsProp;
-        columnInfo.propertyType = tsType;
-        columnInfo.isPK = dbColumInfo.pk > 0 ? true : false;
-        columnInfo.autoIncrease = dbColumInfo.autoIncrement > 0 ? true : false;
-        columnInfos.push(columnInfo);
-      }
+      // const columnInfos: ColumnInfo[] = [];
+      // for (const dbColumInfo of dbColumInfos) {
+      //   const columnInfo = new ColumnInfo();
+      //   const tsProp = lodash.camelCase(dbColumInfo.name);
+      //   const tsType = this.convertToTsType(dbColumInfo.type);
+      //   columnInfo.columnName = dbColumInfo.name;
+      //   columnInfo.property = tsProp;
+      //   columnInfo.propertyType = tsType;
+      //   columnInfo.isPK = dbColumInfo.pk > 0 ? true : false;
+      //   columnInfo.autoIncrease = dbColumInfo.autoIncrement > 0 ? true : false;
+      //   columnInfos.push(columnInfo);
+      // }
 
-      const content = TemplateHelper.generateTableEntity(
+      // const content = TemplateHelper.generateTableEntity(
+      //   tableName,
+      //   columnInfos
+      // );
+      const javaEntityFileInterpreter = new JavaEntityFileInterpreter(
+        DatabaseType.MYSQL
+      );
+      const content = javaEntityFileInterpreter.interpret(
         tableName,
-        columnInfos
+        dbColumInfos
       );
       const textFileInfo = new TextFileInfo();
-      textFileInfo.fileName = lodash.camelCase(tableName) + ".ts";
+      textFileInfo.fileName = _.startCase(_.camelCase(tableName)) + ".java";
       textFileInfo.content = content;
       return new Promise<TextFileInfo>((resolve, reject) =>
         resolve(textFileInfo)
