@@ -14,7 +14,7 @@ import { MysqlTableInfo } from "../db/entity/table";
 import { DbColumnInfo } from "../db/entity/view";
 import { MysqlTableInfoMapper } from "../db/mapper";
 import { CompressHelper, TemplateHelper } from "../helpers";
-import { TextFileInfo } from "../models";
+import { TextFileInfo } from "../model";
 
 export class MysqlService {
   private numberTypes = [
@@ -111,7 +111,7 @@ export class MysqlService {
       config.database = database;
 
       const sql =
-        `SELECT COLUMN_NAME AS name, DATA_TYPE AS type, ` +
+        `SELECT COLUMN_NAME AS name, DATA_TYPE AS type, column_comment AS comment,` +
         `(CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END) AS pk, ` +
         `(CASE WHEN extra = 'auto_increment' THEN 1 ELSE 0 END) as auto_increment ` +
         `FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${database}' AND TABLE_NAME = '${tableName}'`;

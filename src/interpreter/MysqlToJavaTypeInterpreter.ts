@@ -1,6 +1,6 @@
 import { StringUtils } from "ts-commons";
-import { JavaType } from "./constant/JavaType";
-import { MySqlType } from "./constant/MysqlType";
+import { JavaType } from "../model/constant/JavaType";
+import { MySqlType } from "../model/constant/MysqlType";
 import { ITypeInterpreter } from "./ITypeInterpreter";
 
 export class MysqlToJavaTypeInterpreter implements ITypeInterpreter {
@@ -9,7 +9,7 @@ export class MysqlToJavaTypeInterpreter implements ITypeInterpreter {
       return undefined;
     }
 
-    switch (mysqlType.toLocaleUpperCase()) {
+    switch (mysqlType.toUpperCase()) {
       case MySqlType.BIT:
       case MySqlType.BOOL:
       case MySqlType.BOOLEAN:
