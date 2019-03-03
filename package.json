@@ -4,6 +4,7 @@
   "description": "",
   "main": ".\\dist\\bin\\www.js",
   "scripts": {
+    "lint": "tslint --project tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp && node dist\\bin\\www.js",
     "build": "gulp"
@@ -36,6 +37,7 @@
     "sqlite3": "^3.1.13",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-express": "^1.0.7",
+    "ts-commons": "^1.0.18",
     "tsbatis": "^0.1.0"
   },
   "devDependencies": {
@@ -56,6 +58,8 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.2",
     "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^2.5.3",
+    "typescript-tslint-plugin": "^0.3.1"
   }
 }

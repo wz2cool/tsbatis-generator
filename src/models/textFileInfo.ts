@@ -1,4 +1,4 @@
 export class TextFileInfo {
-    public fileName: string;
-    public content: string;
+  public fileName: string;
+  public content: string;
 }
