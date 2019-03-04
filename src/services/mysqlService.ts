@@ -219,7 +219,7 @@ export class MysqlService {
         dbColumInfos
       );
       const textFileInfo = new TextFileInfo();
-      textFileInfo.fileName = _.startCase(_.camelCase(tableName)) + ".java";
+      textFileInfo.fileName = _.upperFirst(_.camelCase(tableName)) + ".java";
       textFileInfo.content = content;
       return new Promise<TextFileInfo>((resolve, reject) =>
         resolve(textFileInfo)
