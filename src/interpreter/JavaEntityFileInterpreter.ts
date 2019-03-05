@@ -22,7 +22,7 @@ export class JavaEntityFileInterpreter extends EntityFileInterpreterBase {
   }
 
   public interpret(tableName: string, dbColumnInfos: DbColumnInfo[]): string {
-    const className = _.startCase(_.camelCase(tableName.toLowerCase()));
+    const className = _.upperFirst(_.camelCase(tableName.toLowerCase()));
     const privateFiledText = this.generatePriveFieldText(dbColumnInfos);
     const publicMothodText = this.genreatePublicMethodText(dbColumnInfos);
     const allJavaTypes = dbColumnInfos.map(x =>
